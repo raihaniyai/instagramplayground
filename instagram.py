@@ -29,8 +29,8 @@ print("\n===== BIODATA =====\n")
 print("Photo Profile\t: " + profile_pic_url_hd)
 print("Username\t: " + username)
 print("Full Name\t: " + full_name)
-# print("Biography\t: " + biography)
-# print("Website\t\t: " + external_url)
+print("Biography\t: " + biography)
+print("Website\t\t: " + external_url)
 print("Followers\t: " + followers)
 print("Followings\t: " + followings)
 print("\n===== POSTS =====\n")
@@ -46,7 +46,6 @@ most_comment = 0
 
 # printing posts and total of like each post (9 last posts)
 while True:
-    # getting posts
     for post in data['data']['user']['edge_owner_to_timeline_media']['edges']:
         print("Post\t\t: " + post['node']['display_url'])
         print("Likes\t\t: " + str(post['node']['edge_media_preview_like']['count']))
@@ -82,3 +81,15 @@ if i > 0:
     print("Total of Comments\t\t: " + str(most_comment) + "\n")
 else:
     print(username + " hasn't upload a photo/video yet or the account is locked")
+
+
+# getting stories
+stories_url = 'https://www.instagram.com/graphql/query/?query_hash=45246d3fe16ccc6577e0bd297a5db1ab&variables={"reel_ids":["' + user_id + '"],"tag_names":[],"location_ids":[],"highlight_reel_ids":[],"precomposed_overlay":false}'
+r = requests.get(url = stories_url)
+data = r.json()
+
+result = body['data']['reels_media'][0]
+
+if len(result) > 0:
+    print("Total Story\t: " + str(len(result)))
+    print("Result\t\t: " + str(result) + "\n")
