@@ -4,6 +4,7 @@ import json
 
 # input for username
 username = input("Username: ")
+cookie = input("Cookie: ")
 
 # api-endpoint
 URL = "https://instagram.com/"+username+"/?__a=1"
@@ -85,11 +86,20 @@ else:
 
 # getting stories
 stories_url = 'https://www.instagram.com/graphql/query/?query_hash=45246d3fe16ccc6577e0bd297a5db1ab&variables={"reel_ids":["' + user_id + '"],"tag_names":[],"location_ids":[],"highlight_reel_ids":[],"precomposed_overlay":false}'
-r = requests.get(url = stories_url)
+r = requests.get(url = stories_url, headers={'Cookie': cookie})
 data = r.json()
 
-result = body['data']['reels_media'][0]
+result = data['data']['reels_media']
 
 if len(result) > 0:
-    print("Total Story\t: " + str(len(result)))
-    print("Result\t\t: " + str(result) + "\n")
+    items = result[0]['items']
+    print("Total Story\t: " + str(len(items)))
+    for story in items:
+        if story['is_video']:
+            content = story['video_resources'][0]['src']
+        else:
+            content = story['display_url']
+        print("Content: " + content + "\n")
+
+else:
+    print("No Stories")
